@@ -1,4 +1,4 @@
-import Book from './AddBook';
+import Book from './RemoveBook';
 import Forms from './Forms';
 
 const BooksList = () => (

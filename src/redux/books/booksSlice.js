@@ -1,43 +1,44 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
-  books: [
-    {
-      item_id: 'item1',
-      title: 'The Great Gatsby',
-      author: 'John Smith',
-      category: 'Fiction',
-    },
-    {
-      item_id: 'item2',
-      title: 'Anna Karenina',
-      author: 'Leo Tolstoy',
-      category: 'Fiction',
-    },
-    {
-      item_id: 'item3',
-      title: 'The Selfish Gene',
-      author: 'Richard Dawkins',
-      category: 'Nonfiction',
-    },
-  ],
+  books: [],
 };
+
+const url = 'https://us-central1-bookstore-api-e63c8.cloudfunctions.net/bookstoreApi/apps/vgCeoKowhQDHJHJRfK8R/books';
+
+export const fetchBook = createAsyncThunk('books/fetchBooks', async () => {
+  const response = await axios.get(url);
+  return response.data;
+});
+
+export const addBook = createAsyncThunk('books/addBook', async (book, thunk) => {
+  await axios.post(url, JSON.stringify(book), { headers: { 'Content-Type': 'application/json' } });
+  const response = thunk.dispatch(fetchBook());
+  return response;
+});
+
+export const removeBook = createAsyncThunk('books/removeBook', async (bookId, thunk) => {
+  await axios.delete(`https://us-central1-bookstore-api-e63c8.cloudfunctions.net/bookstoreApi/apps/vgCeoKowhQDHJHJRfK8R/books/${bookId}`);
+  const response = thunk.dispatch(fetchBook());
+  return response;
+});
 
 const booksSlice = createSlice({
   name: 'books',
   initialState,
 
-  reducers: {
-    addBook: (state, action) => {
-      state.books.push(action.payload);
-    },
-    removeBook: (state, action) => {
-      state.books = state.books.filter(
-        (book) => book.item_id !== action.payload,
-      );
-    },
+  extraReducers(builder) {
+    builder.addCase(fetchBook.fulfilled, (state, action) => {
+      state.books = [];
+      Object.keys(action.payload).forEach((item) => {
+        const book = action.payload[item][0];
+        state.books.push({
+          bookId: item, title: book.title, author: book.author, category: book.category,
+        });
+      });
+    });
   },
 });
 
-export const { addBook, removeBook } = booksSlice.actions;
 export default booksSlice.reducer;

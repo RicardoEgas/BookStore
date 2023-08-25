@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { nanoid } from 'nanoid';
 import { addBook } from '../redux/books/booksSlice';
 
 const Forms = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.books);
 
   return (
     <div>
@@ -19,7 +19,7 @@ const Forms = () => {
             type="button"
             onClick={() => {
               dispatch(addBook({
-                item_id: `item${data.books.length + 1}`,
+                item_id: nanoid(),
                 title,
                 author,
                 category: 'Fiction',

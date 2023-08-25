@@ -1,13 +1,14 @@
 import { useSelector } from 'react-redux';
 import Book from './RemoveBook';
 import Forms from './Forms';
+import './styles.css';
 
 const Books = () => {
   const bookList = useSelector((state) => state.books);
 
   return (
-    <div>
-      <ul>
+    <div className="books-container">
+      <ul className="book-card">
         {
           bookList.books.map((book) => (
             <Book

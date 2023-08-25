@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { addBook } from '../redux/books/booksSlice';
+import './styles.css';
 
 const Forms = () => {
   const [title, setTitle] = useState('');
@@ -9,12 +10,12 @@ const Forms = () => {
   const dispatch = useDispatch();
 
   return (
-    <div>
-      <h3>ADD NEW BOOK</h3>
+    <div className="addBook-container">
+      <h3 className="addBook-title">ADD NEW BOOK</h3>
       <div>
         <form>
-          <input type="text" placeholder="Book title" onChange={(e) => setTitle(e.target.value)} value={title} />
-          <input type="text" placeholder="Author" onChange={(e) => setAuthor(e.target.value)} value={author} />
+          <input type="text" placeholder="Book title" onChange={(e) => setTitle(e.target.value)} value={title} className="title-input" />
+          <input type="text" placeholder="Author" onChange={(e) => setAuthor(e.target.value)} value={author} className="author-input" />
           <button
             type="button"
             onClick={() => {
@@ -27,6 +28,7 @@ const Forms = () => {
               setTitle('');
               setAuthor('');
             }}
+            className="add-btn"
           >
             Add Book
           </button>
